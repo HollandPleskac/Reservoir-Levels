@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("@appliedblockchain/chainlink-plugins-fund-link")
 require('dotenv').config()
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -18,7 +19,16 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.7",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.7"
+      },
+      {
+        version: "0.4.24"
+      }
+    ]
+  },
   networks: {
     hardhat: {
       chainId: 1337 // make sure everything works

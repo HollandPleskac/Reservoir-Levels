@@ -33,7 +33,7 @@ const GrayBackground = (params) => {
 const RedLine = () => {
   return (
     <div className='flex items-center' >
-      <div className='bg-red-400' style={{ width: 90, height: 2, marginRight: 5 }} ></div>
+      <div className='bg-red-600' style={{ width: 90, height: 2, marginRight: 5 }} ></div>
       <p className='text-sm' >4125</p>
     </div>
   )
@@ -43,7 +43,7 @@ const BlueBar = () => {
   return (
     <div className='relative' >
       <p className='text-sm absolute' style={{ marginLeft: 80, top: -10, left: 10 }} >3200</p>
-      <div className='bg-blue-400' style={{ width: 70, height: 40, marginLeft: 5 }} >
+      <div className='bg-blue-600 border-2 border-gray-400' style={{ width: 70, height: 40, marginLeft: 5 }} >
       </div>
     </div>
   )

@@ -1,9 +1,11 @@
-import React from 'react'
-import Reservoir from '../components/reservoir'
+import React, { useContext } from 'react'
+import Reservoir from '../components/Reservoir'
+import Header from '../components/Header'
 
 const HomePage = () => {
   return (
     <div className='h-screen flex flex-col items-center ' >
+      <Header />
       Home Page
       <Reservoir
         name="Lake Oroville"

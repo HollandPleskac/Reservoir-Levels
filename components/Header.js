@@ -8,7 +8,7 @@ import ConnectionContext from '../context/connectionContext'
 const Header = () => {
   const connectionCtx = useContext(ConnectionContext)
   return (
-    <div className='w-full flex items-center shadow-md' >
+    <div className='z-10 w-full flex items-center shadow-md' >
       <Logo />
       <div className='flex-grow flex justify-center items-center py-4' >
         <HeaderLink name="About" href="#" />
@@ -27,7 +27,7 @@ const Logo = () => {
     <Link passHref href="/" >
       <a className='w-1/4 pl-10 flex items-center cursor-pointer' >
         <FontAwesomeIcon icon={faAdjust} className="text-3xl mr-4" />
-        <h1 className='text-lg' >Reservoir Levels</h1>
+        <h1 className='text-lg' >Alameda Water District</h1>
       </a>
     </Link>
   )

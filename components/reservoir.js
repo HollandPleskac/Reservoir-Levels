@@ -1,7 +1,7 @@
 // add borders (improve ui)
 import React from 'react'
 
-const Reservoir = () => {
+const Reservoir = ({ maxHeight, historicalHeight, currentHeight }) => {
   return (
     <div className='flex flex-col items-center' >
       <p className='mb-1' >Oroville Lake</p>
@@ -20,7 +20,7 @@ const Reservoir = () => {
   )
 }
 
-const GrayBackground = (params) => {
+const GrayBackground = () => {
   return (
     <div className='bg-gray-200 border-2 border-gray-400' style={{ height: 100, width: 80 }} >
       <p className='text-sm absolute' style={{ top: -10, left: -40 }} >4823</p>

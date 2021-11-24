@@ -30,9 +30,9 @@ const MainContent = () => {
         <div className='flex-grow flex flex-col justify-center' >
           <div className='flex justify-center mb-4' >
             <div className='mr-48' >
-              <Reservoir />
+              <Reservoir maxHeight={100} historicalHeight={80} currentHeight={50} name='Oroville Lake' />
             </div>
-            <Reservoir />
+            <Reservoir maxHeight={100} historicalHeight={80} currentHeight={50} name='Trinity Lake' />
           </div>
           <NextPayout />
         </div>

@@ -41,7 +41,7 @@ const AdditionalResourcesInfo = () => {
   return (
     <>
       <h2 className='text-lg mb-2 mt-6' >Additional Resources</h2>
-      <p className='pr-10' >To learn more about water conservation visit these websites.:</p>
+      <p className='pr-10' >To learn more about water conservation visit these websites.</p>
       <ul className='mt-2' >
         <li>1. alemendawaterdistrict.com</li>
         <li>2. orovillelake.com</li>

@@ -4,6 +4,8 @@ import Reservoir from '../components/Reservoir'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import SideBar from '../components/SideBar'
+import AlertsSignup from '../components/AlertsSignup'
+import ProgressBar from '../components/ProgressBar'
 
 const HomePage = () => {
   return (
@@ -40,16 +42,6 @@ const MainContent = () => {
   )
 }
 
-const ProgressBar = () => {
-  return (
-    <div className='bg-reservoirRed mx-10 py-4 mt-4 text-center text-xl text-white' >
-      Almost There
-    </div>
-  )
-}
-
-
-
 const NextPayout = () => {
   return (
     <h2 className='w-full text-center text-4xl mt-10' >
@@ -58,13 +50,7 @@ const NextPayout = () => {
   )
 }
 
-const AlertsSignup = () => {
-  return (
-    <div className='w-full bg-white flex justify-center text-lg py-5 shadow-md cursor-pointer' >
-      Sign up for alerts
-    </div>
-  )
-}
+
 
 
 

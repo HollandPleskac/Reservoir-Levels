@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import ContractContext from '../context/contractContext'
 
 const SideBar = () => {
+  const contractCtx = useContext(ContractContext)
+
+  const isInitialized = contractCtx.orovilleHeight !== null && contractCtx.trinityHeight !== null
+  const isAboveHistoricalAvg = contractCtx.orovilleHeight > contractCtx.orovilleHistAvg && contractCtx.trinityHeight > contractCtx.trinityHistAvg
+  const color = !isInitialized ? 'white' : isAboveHistoricalAvg ? 'reservoirGreen' : 'reservoirRed'
+
   return (
     <div className='z-20 bg-white flex-grow w-1/4' style={{ boxShadow: "0px 6px 4px rgba(0, 0, 0, 0.25)" }} >
       <hr className="w-full" />
       <div className='py-6 px-10 w-full' >
-        <h1 className='text-xl mb-8' >We&apos;re in the <span className='text-reservoirRed' >red!</span></h1>
-        <StatusInfo />
+        <h1 className='text-xl mb-8' >
+          We&apos;re in the <span className={`text-${color}`} >{color === 'reservoirRed' ? 'red!' : 'green!'}</span>
+        </h1>
+        <StatusInfo color={color} />
         <ConserveInfo />
         <AdditionalResourcesInfo />
       </div>
@@ -14,11 +23,18 @@ const SideBar = () => {
   )
 }
 
-const StatusInfo = () => {
+const StatusInfo = ({ color }) => {
+  let text
+
+  if (color === 'reservoirGreen')
+    text = 'The water levels in the Lake Oroville and Trinity Lake reservoirs are above historical averages.  Well done.  As a community we’ve worked hard to conserve water.'
+  else
+    text = 'There water levels in the Lake Oroville and Trinity Lake reservoirs are below historical averages.  We need to work together in order to conserve water!'
+
   return (
     <>
       <h2 className='text-lg mb-2' >What does this mean?</h2>
-      <p className='pr-9' >There water levels in the Lake Oroville and Trinity Lake reservoirs are below historical averages.  We need to work together in order to conserve water!</p>
+      <p className={`pr-9`} >{text}</p>
     </>
   )
 }

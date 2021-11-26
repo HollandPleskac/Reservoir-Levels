@@ -2,12 +2,14 @@
 import React, { useContext, useState, useEffect } from 'react'
 import ContractContext from '../context/contractContext'
 import { ethers } from 'ethers'
+import { useTimer } from 'react-timer-hook';
 import Reservoir from '../components/Reservoir'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import SideBar from '../components/SideBar'
 import AlertsSignup from '../components/AlertsSignup'
 import ProgressBar from '../components/ProgressBar'
+import e from 'cors';
 
 const decimals = ethers.BigNumber.from(10).pow(18)
 
@@ -32,7 +34,7 @@ const MainContent = () => {
       <div className='flex flex-col flex-grow' >
         <ProgressBar />
         <div className='flex-grow flex flex-col justify-center' >
-          <ReservoirsContainer/>
+          <ReservoirsContainer />
           <NextPayout />
         </div>
       </div>
@@ -73,9 +75,34 @@ const ReservoirsContainer = () => {
 
 
 const NextPayout = () => {
+  // to get current date
+  // get counter of smart contract (each counter = 30 seconds)
+  // current date + (counter * 30 seconds) 
+  const time = new Date();
+  const expiryTimestamp = time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
+
+  const {
+    seconds,
+    minutes,
+    hours,
+    days,
+    isRunning,
+    start,
+    pause,
+    resume,
+    restart,
+  } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
+
+  const daysDisplay = days < 10 ? `0${days}` : days
+  const hoursDisplay = hours < 10 ? `0${hours}` : hours
+  const minutesDisplay = minutes < 10 ? `0${minutes}` : minutes
+  const secondsDisplay = seconds < 10 ? `0${seconds}` : seconds
+
   return (
     <h2 className='w-full text-center text-4xl mt-10' >
-      Next Payout: <span className='text-blue-600' >00:00:02</span>
+      Next Payout: <span className='text-blue-600' >{daysDisplay}:{hoursDisplay}:{minutesDisplay}:{secondsDisplay}</span>
+
+
     </h2>
   )
 }

@@ -7,7 +7,10 @@ contract ReservoirLevels is ChainlinkClient {
 
     uint256 public orovilleLakeHeight;
     uint256 public trinityLakeHeight;
+    uint256 public orovilleHistoricalAvgHeight;
+    uint256 public trinityHistoricalAvgHeight;
     string public lastReq;
+    uint public count;
 
     address private oracle;
     bytes32 private jobId;
@@ -19,40 +22,71 @@ contract ReservoirLevels is ChainlinkClient {
         jobId = "d5270d1c311941d0b08bead21fea7747";
         fee = 0.1 * 10 ** 18; // 0.1 LINK
         lastReq = "trinity";
+        count = 0;
     }
 
+    // REQUEST FUNCTIONS
 
-    function requestHeightData(string memory lakeName) public returns (bytes32 requestId)
+    function requestOrovilleHeight() public returns (bytes32 requestId)
     {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
-
-        // Set the URL to perform the GET request on
-        request.add("get", string(abi.encodePacked("https://water-levels-api.herokuapp.com/",lakeName)));
-
-        // Set the path to find the desired data in the API response, where the response format is:
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillOrovilleHeight.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/oroville_lake");
         // {"height":x}
         request.add("path", "height");
 
-        // Multiply the result by 1000000000000000000 to remove decimals
-        // int timesAmount = 10**18;
-        // request.addInt("times", timesAmount);
-
-        // Sends the request
         return sendChainlinkRequestTo(oracle, request, fee);
     }
 
-    /**
-     * Receive the response in the form of uint256
-     */
-    function fulfill(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    function requestTrinityHeight() public returns (bytes32 requestId)
     {
-        if (keccak256(abi.encodePacked((lastReq))) == keccak256(abi.encodePacked(("trinity")))) {
-            orovilleLakeHeight = _height;
-            lastReq = "oroville";
-        } else {
-            trinityLakeHeight = _height;
-            lastReq = "trinity";
-        }
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillTrinityHeight.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/trinity_lake");
+        request.add("path", "height");
+
+        return sendChainlinkRequestTo(oracle, request, fee);
+    }
+
+    function requestOrovilleHistoricalAvgHeight() public returns (bytes32 requestId)
+    {
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillOrovilleHistoricalAvgHt.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/oroville_lake_historical_avg");
+        request.add("path", "height");
+
+        return sendChainlinkRequestTo(oracle, request, fee);
+    }
+
+    function requestTrinityHistoricalAvgHeight() public returns (bytes32 requestId)
+    {
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillTrinityHistoricalAvgHt.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/trinity_lake_historical_avg");
+        request.add("path", "height");
+
+        return sendChainlinkRequestTo(oracle, request, fee);
+    }
+
+
+    // FULFILL FUNCTIONS
+
+    function fulfillOrovilleHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    {
+        orovilleLakeHeight = _height;
+        count++;
+    }
+
+    function fulfillTrinityHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    {
+        trinityLakeHeight = _height;
+        count++;
+    }
+
+    function fulfillOrovilleHistoricalAvgHt(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    {
+        orovilleHistoricalAvgHeight = _height;
+    }
+
+    function fulfillTrinityHistoricalAvgHt(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    {
+        trinityHistoricalAvgHeight = _height;
     }
 
     function stringToBytes32(string memory source) public pure returns (bytes32 result) {

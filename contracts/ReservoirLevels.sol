@@ -9,7 +9,6 @@ contract ReservoirLevels is ChainlinkClient {
     uint256 public trinityLakeHeight;
     uint256 public orovilleHistoricalAvgHeight;
     uint256 public trinityHistoricalAvgHeight;
-    string public lastReq;
     uint public count;
 
     address private oracle;
@@ -21,7 +20,6 @@ contract ReservoirLevels is ChainlinkClient {
         oracle = 0xc57B33452b4F7BB189bB5AfaE9cc4aBa1f7a4FD8;
         jobId = "d5270d1c311941d0b08bead21fea7747";
         fee = 0.1 * 10 ** 18; // 0.1 LINK
-        lastReq = "trinity";
         count = 0;
     }
 
@@ -76,7 +74,6 @@ contract ReservoirLevels is ChainlinkClient {
     function fulfillTrinityHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
     {
         trinityLakeHeight = _height;
-        count++;
     }
 
     function fulfillOrovilleHistoricalAvgHt(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)

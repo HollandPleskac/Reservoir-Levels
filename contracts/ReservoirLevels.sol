@@ -1,27 +1,107 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
+import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 
-contract ReservoirLevels is ChainlinkClient {
+contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
     using Chainlink for Chainlink.Request;
 
     uint256 public orovilleLakeHeight;
     uint256 public trinityLakeHeight;
     uint256 public orovilleHistoricalAvgHeight;
     uint256 public trinityHistoricalAvgHeight;
-    uint public count;
 
     address private oracle;
     bytes32 private jobId;
     uint256 private fee;
 
-    constructor() {
-        setPublicChainlinkToken();
-        oracle = 0xc57B33452b4F7BB189bB5AfaE9cc4aBa1f7a4FD8;
-        jobId = "d5270d1c311941d0b08bead21fea7747";
-        fee = 0.1 * 10 ** 18; // 0.1 LINK
-        count = 0;
+    uint public counter;
+    address[] participants;
+    // uint public fetchedCount;
+    // uint public fundsCount;
+    // uint public histAvgCount;
+
+    uint public immutable interval;
+    uint public lastTimeStamp;
+    
+    constructor(uint updateInterval) payable {
+      setPublicChainlinkToken();
+      interval = updateInterval;
+      lastTimeStamp = block.timestamp;
+
+      oracle = 0xc57B33452b4F7BB189bB5AfaE9cc4aBa1f7a4FD8;
+      jobId = "d5270d1c311941d0b08bead21fea7747";
+      fee = 0.1 * 10 ** 18; // 0.1 LINK
+
+      counter = 0;
+    //   fetchedCount = 0;
+    //   fundsCount = 0;
+    //   histAvgCount = 0;
     }
+
+    function checkUpkeep(bytes calldata /* checkData */) external override returns (bool upkeepNeeded, bytes memory /* performData */) {
+        upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
+    }
+
+    function performUpkeep(bytes calldata /* performData */) external override {
+        lastTimeStamp = block.timestamp;
+        counter = counter + 1;
+        
+        if (counter!= 1 && counter%6==1) {
+            // 1 year (get new historical avg)
+            // get reservoir levels
+            getNewHistoricalAvg();
+            fetchReservoirLevels();
+        } else if (counter%3 == 0) {
+            // 1 month (dole out funds) dont update reservoir levels
+            distributeFunds();
+        } else {
+            // update reservoir levels
+            fetchReservoirLevels();
+        }
+    }   
+
+    function simulateUpkeep() public {
+        counter = counter + 1;
+        
+        if (counter!= 1 && counter%6==1) {
+            // 1 year (get new historical avg)
+            // get reservoir levels
+            getNewHistoricalAvg();
+            fetchReservoirLevels();
+        } else if (counter%3 == 0) {
+            // 1 month (distribute funds) dont update reservoir levels
+            distributeFunds();
+        } else {
+            // update reservoir levels
+            fetchReservoirLevels();
+        }
+    }
+
+    function fetchReservoirLevels() private {
+        // fetchedCount++;
+        requestOrovilleHeight();
+        requestTrinityHeight();
+    }
+
+    function distributeFunds() public payable {
+        if (orovilleLakeHeight > orovilleHistoricalAvgHeight && trinityLakeHeight > trinityHistoricalAvgHeight) {
+            for(uint i = 0; i < participants.length; i++) {
+                payable(participants[i]).transfer(1000000000000000000);
+            }
+        }
+    }
+
+    function getNewHistoricalAvg() private {
+        // histAvgCount++;
+        requestOrovilleHistoricalAvgHeight();
+        requestTrinityHistoricalAvgHeight();
+    }
+
+
+
+    // Call API
 
     // REQUEST FUNCTIONS
 
@@ -68,7 +148,6 @@ contract ReservoirLevels is ChainlinkClient {
     function fulfillOrovilleHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
     {
         orovilleLakeHeight = _height;
-        count++;
     }
 
     function fulfillTrinityHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
@@ -85,17 +164,4 @@ contract ReservoirLevels is ChainlinkClient {
     {
         trinityHistoricalAvgHeight = _height;
     }
-
-    function stringToBytes32(string memory source) public pure returns (bytes32 result) {
-        bytes memory tempEmptyStringTest = bytes(source);
-        if (tempEmptyStringTest.length == 0) {
-            return 0x0;
-        }
-
-        assembly {
-            result := mload(add(source, 32))
-        }
-    }
-
 }
-

@@ -2,11 +2,12 @@ import React from 'react'
 
 const Reservoir = ({ maxHeight, historicalHeight, currentHeight, name }) => {
   const historicalPercentage = historicalHeight / maxHeight * 100
-  const eightPercent = maxHeight * 0.08
-  console.log(eightPercent)
-  const redBarHeightFromTop = 200 - (historicalPercentage * 2) - eightPercent
-  // - eightPercent corrects for the fact that the red bar's container pushes it down by roughly 8% - this aligns the red bar perfectly
-
+  console.log('reservoir historical percent', historicalPercentage)
+  // const onePercent = maxHeight * 0.01
+  // console.log(onePercent)
+  const redBarHeightFromTop = 200 - (historicalPercentage * 2)
+  // - onePercent corrects for the fact that the red bar's container pushes it down by roughly 1% - this aligns the red bar perfectly
+  console.log("historadskjf;klasdjf;klsadjklfjsdkljfical height", historicalHeight)
   return (
     <div className='flex flex-col items-center' >
       <p className='mb-4 text-lg' >{name}</p>

@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 
-contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
+contract ReservoirLevels is KeeperCompatibleInterface, ChainlinkClient {
     using Chainlink for Chainlink.Request;
 
     uint256 public donPedroLakeHeight;

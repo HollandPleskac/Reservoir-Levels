@@ -9,7 +9,6 @@ import Footer from '../components/Footer'
 import SideBar from '../components/SideBar'
 import AlertsSignup from '../components/AlertsSignup'
 import ProgressBar from '../components/ProgressBar'
-import { Contract } from 'hardhat/internal/hardhat-network/stack-traces/model';
 
 const HomePage = () => {
   return (
@@ -47,9 +46,9 @@ const ReservoirsContainer = () => {
   return (
     <div className='flex justify-center mb-4' >
       <div className='mr-48' >
-        <Reservoir maxHeight={100} historicalHeight={75} currentHeight={contractCtx.donPedroHeight} name='Don Pedro Reservoir' />
+        <Reservoir maxHeight={2030} historicalHeight={contractCtx.donPedroHistAvgHt} currentHeight={contractCtx.donPedroHeight} name='Don Pedro Reservoir' />
       </div>
-      <Reservoir maxHeight={100} historicalHeight={80} currentHeight={contractCtx.modestoHeight} name='Modesto Reservoir' />
+      <Reservoir maxHeight={952} historicalHeight={contractCtx.modestoHistAvgHt} currentHeight={contractCtx.modestoHeight} name='Modesto Reservoir' />
     </div>
   )
 }
@@ -75,7 +74,7 @@ const NextPayout = () => {
   useEffect(() => {
     const getCurrentCounter = async () => {
       const c = await contractCtx.getCounter()
-      const countersTillPayout = 7 - (c % 6)
+      const countersTillPayout = 3 - (c % 3)
       const secondsTillPayout = countersTillPayout * 25 // each counter is 25 seconds
 
       const time = new Date();

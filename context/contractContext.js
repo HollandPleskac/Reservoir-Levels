@@ -4,18 +4,16 @@ import { ethers } from 'ethers'
 
 const url = 'http://localhost:3000/'
 // const url = 'https://{INSERT_PROJECT}.vercel.app/'
-const decimals = ethers.BigNumber.from(10).pow(18)
+// const decimals = ethers.BigNumber.from(10).pow(18)
 
 const ContractContext = React.createContext({
   Contract: null,
   contractAddress: null,
   donPedroHeight: null,
   modestoHeight: null,
-  donPedroHistAvg: null,
-  modestoHistAvg: null,
+  donPedroHistAvgHt: null,
+  modestoHistAvgHt: null,
   getCounter: async () => { },
-  getDonPedroHistAvgHt: async () => { },
-  getModestoHistAvgHt: async () => { }
 })
 
 export const ContractContextProvider = (props) => {
@@ -24,6 +22,8 @@ export const ContractContextProvider = (props) => {
   const [contractAddress, setContractAddress] = useState(null)
   const [donPedroHeight, setDonPedroHeight] = useState(null)
   const [modestoHeight, setModestoHeight] = useState(null)
+  const [donPedroHistAvgHt, setDonPedroHistAvgHt] = useState(null)
+  const [modestoHistAvgHt, setModestoHistAvgHt] = useState(null)
 
   useEffect(() => {
     const setContractData = async () => {
@@ -35,8 +35,12 @@ export const ContractContextProvider = (props) => {
 
         const donPedroHt = await getDonPedroLakeHeight(address, contract.abi)
         const modestoHt = await getModestoLakeHeight(address, contract.abi)
+        const donPedroHistAvgHt = await getDonPedroHistAvgHt(address, contract.abi)
+        const modestoHistAvgHt = await getModestoHistAvgHt(address, contract.abi)
         setDonPedroHeight(donPedroHt)
         setModestoHeight(modestoHt)
+        setDonPedroHistAvgHt(donPedroHistAvgHt)
+        setModestoHistAvgHt(modestoHistAvgHt)
 
         console.log('set contract data')
       } catch (e) {
@@ -54,10 +58,10 @@ export const ContractContextProvider = (props) => {
     const contract = new ethers.Contract(addr, abi, provider)
     try {
       const donPedroHt = await contract.donPedroLakeHeight()
-      console.log('got don pedro lake height', donPedroHt.div(decimals).toNumber())
-      return donPedroHt.div(decimals).toNumber()
+      console.log('got don pedro lake height', donPedroHt.toNumber())
+      return donPedroHt.toNumber()
     } catch (e) {
-      console.log('error getting account', e)
+      console.log('error getting height', e)
       return 'error'
     }
   }
@@ -69,10 +73,10 @@ export const ContractContextProvider = (props) => {
     const contract = new ethers.Contract(addr, abi, provider)
     try {
       const modestoHt = await contract.modestoLakeHeight()
-      console.log('got don pedro lake height', modestoHt.div(decimals).toNumber())
-      return modestoHt.div(decimals).toNumber()
+      console.log('got don pedro lake height', modestoHt.toNumber())
+      return modestoHt.toNumber()
     } catch (e) {
-      console.log('error getting account', e)
+      console.log('error getting height', e)
       return 'error'
     }
   }
@@ -85,10 +89,10 @@ export const ContractContextProvider = (props) => {
     const contract = new ethers.Contract(addr, abi, provider)
     try {
       const donPedroAvgHistoricalHt = await contract.donPedroHistoricalAvgHeight()
-      console.log('got don pedro lake historical avg height', donPedroAvgHistoricalHt.div(decimals).toNumber())
-      return donPedroAvgHistoricalHt.div(decimals).toNumber()
+      console.log('got don pedro lake historical avg height', donPedroAvgHistoricalHt.toNumber())
+      return donPedroAvgHistoricalHt.toNumber()
     } catch (e) {
-      console.log('error getting account', e)
+      console.log('error getting height', e)
       return 'error'
     }
   }
@@ -101,10 +105,10 @@ export const ContractContextProvider = (props) => {
     const contract = new ethers.Contract(addr, abi, provider)
     try {
       const modestoAvgHistoricalHt = await contract.modestoHistoricalAvgHeight()
-      console.log('got don pedro lake historical avg height', modestoAvgHistoricalHt.div(decimals).toNumber())
-      return modestoAvgHistoricalHt.div(decimals).toNumber()
+      console.log('got modesto historical avg height', modestoAvgHistoricalHt.toNumber())
+      return modestoAvgHistoricalHt.toNumber()
     } catch (e) {
-      console.log('error getting account', e)
+      console.log('error getting height', e)
       return 'error'
     }
   }
@@ -122,8 +126,8 @@ export const ContractContextProvider = (props) => {
     const contract = new ethers.Contract(contractAddress, Contract.abi, provider)
     try {
       const counter = await contract.counter()
-      console.log('got counter', counter.div(decimals).toNumber())
-      return counter.div(decimals).toNumber()
+      console.log('got counter', counter.toNumber())
+      return counter.toNumber()
     } catch (e) {
       console.log('error getting counter', e)
       return 'error'
@@ -138,11 +142,9 @@ export const ContractContextProvider = (props) => {
       contractAddress,
       donPedroHeight,
       modestoHeight,
-      donPedroHistAvg: 100,
-      modestoHistAvg: 100,
+      donPedroHistAvgHt,
+      modestoHistAvgHt,
       getCounter,
-      getDonPedroHistAvgHt,
-      getModestoHistAvgHt,
     }} >
       {props.children}
     </ContractContext.Provider>

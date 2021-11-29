@@ -9,18 +9,21 @@ const decimals = ethers.BigNumber.from(10).pow(18)
 const ContractContext = React.createContext({
   Contract: null,
   contractAddress: null,
-  orovilleHeight: null,
-  trinityHeight: null,
-  orovilleHistAvg: null,
-  trinityHistAvg: null,
+  donPedroHeight: null,
+  modestoHeight: null,
+  donPedroHistAvg: null,
+  modestoHistAvg: null,
+  getCounter: async () => { },
+  getDonPedroHistAvgHt: async () => { },
+  getModestoHistAvgHt: async () => { }
 })
 
 export const ContractContextProvider = (props) => {
 
   const [Contract, setContract] = useState(null) // capital Contract refers to the compiled contract (not the abi)
   const [contractAddress, setContractAddress] = useState(null)
-  const [orovilleHeight, setOrovilleHeight] = useState(null)
-  const [trinityHeight, setTrinityHeight] = useState(null)
+  const [donPedroHeight, setDonPedroHeight] = useState(null)
+  const [modestoHeight, setModestoHeight] = useState(null)
 
   useEffect(() => {
     const setContractData = async () => {
@@ -30,10 +33,10 @@ export const ContractContextProvider = (props) => {
         setContract(contract)
         setContractAddress(address)
 
-        const orovilleHt = await getOrovilleLakeHeight(address, contract.abi)
-        const trinityHt = await getTrinityLakeHeight(address, contract.abi)
-        setOrovilleHeight(orovilleHt)
-        setTrinityHeight(trinityHt)
+        const donPedroHt = await getDonPedroLakeHeight(address, contract.abi)
+        const modestoHt = await getModestoLakeHeight(address, contract.abi)
+        setDonPedroHeight(donPedroHt)
+        setModestoHeight(modestoHt)
 
         console.log('set contract data')
       } catch (e) {
@@ -44,48 +47,102 @@ export const ContractContextProvider = (props) => {
     setContractData()
   }, [])
 
-  // get oroville lake height
-  const getOrovilleLakeHeight = async (addr, abi) => {
-    console.log("getOrovilleLakeHeight called from contractContext")
+  // get Don Pedro lake height
+  const getDonPedroLakeHeight = async (addr, abi) => {
+    console.log("getDonPedroLakeHeight called from contractContext")
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const contract = new ethers.Contract(addr, abi, provider)
     try {
-      const orovilleHt = await contract.orovilleLakeHeight()
-      console.log('got oroville lake height', orovilleHt.div(decimals).toNumber())
-      return orovilleHt.div(decimals).toNumber()
+      const donPedroHt = await contract.donPedroLakeHeight()
+      console.log('got don pedro lake height', donPedroHt.div(decimals).toNumber())
+      return donPedroHt.div(decimals).toNumber()
     } catch (e) {
       console.log('error getting account', e)
       return 'error'
     }
   }
 
-  // get trinity lake height
-  const getTrinityLakeHeight = async (addr, abi) => {
-    console.log("getTrinityLakeHeight called from contractContext")
+  // get modesto lake height
+  const getModestoLakeHeight = async (addr, abi) => {
+    console.log("getModestoLakeHeight called from contractContext")
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const contract = new ethers.Contract(addr, abi, provider)
     try {
-      const trinityHt = await contract.trinityLakeHeight()
-      console.log('got oroville lake height', trinityHt.div(decimals).toNumber())
-      return trinityHt.div(decimals).toNumber()
+      const modestoHt = await contract.modestoLakeHeight()
+      console.log('got don pedro lake height', modestoHt.div(decimals).toNumber())
+      return modestoHt.div(decimals).toNumber()
     } catch (e) {
       console.log('error getting account', e)
       return 'error'
     }
   }
 
+  // get don pedro historicalAvgHeight
+
+  const getDonPedroHistAvgHt = async (addr, abi) => {
+    console.log("getDonPedroHistAvgHt called from contractContext")
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const contract = new ethers.Contract(addr, abi, provider)
+    try {
+      const donPedroAvgHistoricalHt = await contract.donPedroHistoricalAvgHeight()
+      console.log('got don pedro lake historical avg height', donPedroAvgHistoricalHt.div(decimals).toNumber())
+      return donPedroAvgHistoricalHt.div(decimals).toNumber()
+    } catch (e) {
+      console.log('error getting account', e)
+      return 'error'
+    }
+  }
+
+  // get modesto historicalAvgHeight
+
+  const getModestoHistAvgHt = async (addr, abi) => {
+    console.log("getModestoHistAvgHt called from contractContext")
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const contract = new ethers.Contract(addr, abi, provider)
+    try {
+      const modestoAvgHistoricalHt = await contract.modestoHistoricalAvgHeight()
+      console.log('got don pedro lake historical avg height', modestoAvgHistoricalHt.div(decimals).toNumber())
+      return modestoAvgHistoricalHt.div(decimals).toNumber()
+    } catch (e) {
+      console.log('error getting account', e)
+      return 'error'
+    }
+  }
 
   // get time left in contract
+
+  // each counter = 25 seconds
+  // days represented by 25 sec (1 counter)
+  // months represented by 75 sec (3 counter)
+  // years represented by counter&6==1 (1 day after the year ends)
+
+  const getCounter = async () => {
+    console.log("getCounter called from contractContext")
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const contract = new ethers.Contract(contractAddress, Contract.abi, provider)
+    try {
+      const counter = await contract.counter()
+      console.log('got counter', counter.div(decimals).toNumber())
+      return counter.div(decimals).toNumber()
+    } catch (e) {
+      console.log('error getting counter', e)
+      return 'error'
+    }
+  }
+
 
 
   return (
     <ContractContext.Provider value={{
       Contract,
       contractAddress,
-      orovilleHeight,
-      trinityHeight,
-      orovilleHistAvg: 100,
-      trinityHistAvg: 100
+      donPedroHeight,
+      modestoHeight,
+      donPedroHistAvg: 100,
+      modestoHistAvg: 100,
+      getCounter,
+      getDonPedroHistAvgHt,
+      getModestoHistAvgHt,
     }} >
       {props.children}
     </ContractContext.Provider>

@@ -4,8 +4,8 @@ import ContractContext from '../context/contractContext'
 const ProgressBar = () => {
   const contractCtx = useContext(ContractContext)
 
-  const isInitialized = contractCtx.orovilleHeight !== null && contractCtx.trinityHeight !== null
-  const isAboveHistoricalAvg = contractCtx.orovilleHeight > contractCtx.orovilleHistAvg && contractCtx.trinityHeight > contractCtx.trinityHistAvg
+  const isInitialized = contractCtx.donPedroHeight !== null && contractCtx.modestoHeight !== null
+  const isAboveHistoricalAvg = contractCtx.donPedroHeight > contractCtx.donPedroHistAvg && contractCtx.modestoHeight > contractCtx.modestoHistAvg
   const color = isAboveHistoricalAvg ? 'bg-reservoirGreen' : 'bg-reservoirRed'
 
   if (isInitialized)

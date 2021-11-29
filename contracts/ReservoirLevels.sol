@@ -7,10 +7,10 @@ import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
     using Chainlink for Chainlink.Request;
 
-    uint256 public orovilleLakeHeight;
-    uint256 public trinityLakeHeight;
-    uint256 public orovilleHistoricalAvgHeight;
-    uint256 public trinityHistoricalAvgHeight;
+    uint256 public donPedroLakeHeight;
+    uint256 public modestoLakeHeight;
+    uint256 public donPedroHistoricalAvgHeight;
+    uint256 public modestoHistoricalAvgHeight;
 
     address private oracle;
     bytes32 private jobId;
@@ -38,6 +38,10 @@ contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
     //   fetchedCount = 0;
     //   fundsCount = 0;
     //   histAvgCount = 0;
+      donPedroLakeHeight = 1115;
+      modestoLakeHeight = 204;
+      donPedroHistoricalAvgHeight = 1350;
+      modestoHistoricalAvgHeight = 604;
     }
 
     function checkUpkeep(bytes calldata /* checkData */) external override returns (bool upkeepNeeded, bytes memory /* performData */) {
@@ -81,12 +85,12 @@ contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
 
     function fetchReservoirLevels() private {
         // fetchedCount++;
-        requestOrovilleHeight();
-        requestTrinityHeight();
+        requestDonPedroHeight();
+        requestModestoHeight();
     }
 
     function distributeFunds() public payable {
-        if (orovilleLakeHeight > orovilleHistoricalAvgHeight && trinityLakeHeight > trinityHistoricalAvgHeight) {
+        if (donPedroLakeHeight > donPedroHistoricalAvgHeight && modestoLakeHeight > modestoHistoricalAvgHeight) {
             for(uint i = 0; i < participants.length; i++) {
                 payable(participants[i]).transfer(1000000000000000000);
             }
@@ -95,8 +99,8 @@ contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
 
     function getNewHistoricalAvg() private {
         // histAvgCount++;
-        requestOrovilleHistoricalAvgHeight();
-        requestTrinityHistoricalAvgHeight();
+        requestDonPedroHistoricalAvgHeight();
+        requestModestoHistoricalAvgHeight();
     }
 
 
@@ -105,38 +109,38 @@ contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
 
     // REQUEST FUNCTIONS
 
-    function requestOrovilleHeight() public returns (bytes32 requestId)
+    function requestDonPedroHeight() public returns (bytes32 requestId)
     {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillOrovilleHeight.selector);
-        request.add("get", "https://water-levels-api.herokuapp.com/oroville_lake");
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillDonPedroHeight.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/don_pedro_reservoir");
         // {"height":x}
         request.add("path", "height");
 
         return sendChainlinkRequestTo(oracle, request, fee);
     }
 
-    function requestTrinityHeight() public returns (bytes32 requestId)
+    function requestModestoHeight() public returns (bytes32 requestId)
     {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillTrinityHeight.selector);
-        request.add("get", "https://water-levels-api.herokuapp.com/trinity_lake");
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillModestoHeight.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/modesto_reservoir");
         request.add("path", "height");
 
         return sendChainlinkRequestTo(oracle, request, fee);
     }
 
-    function requestOrovilleHistoricalAvgHeight() public returns (bytes32 requestId)
+    function requestDonPedroHistoricalAvgHeight() public returns (bytes32 requestId)
     {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillOrovilleHistoricalAvgHt.selector);
-        request.add("get", "https://water-levels-api.herokuapp.com/oroville_lake_historical_avg");
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillDonPedroHistoricalAvgHt.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/don_pedro_historical_avg");
         request.add("path", "height");
 
         return sendChainlinkRequestTo(oracle, request, fee);
     }
 
-    function requestTrinityHistoricalAvgHeight() public returns (bytes32 requestId)
+    function requestModestoHistoricalAvgHeight() public returns (bytes32 requestId)
     {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillTrinityHistoricalAvgHt.selector);
-        request.add("get", "https://water-levels-api.herokuapp.com/trinity_lake_historical_avg");
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillModestoHistoricalAvgHt.selector);
+        request.add("get", "https://water-levels-api.herokuapp.com/modesto_reservoir_historical_avg");
         request.add("path", "height");
 
         return sendChainlinkRequestTo(oracle, request, fee);
@@ -145,23 +149,24 @@ contract ReservoirLevelsTest3 is KeeperCompatibleInterface, ChainlinkClient {
 
     // FULFILL FUNCTIONS
 
-    function fulfillOrovilleHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    function fulfillDonPedroHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
     {
-        orovilleLakeHeight = _height;
+        donPedroLakeHeight = _height;
     }
 
-    function fulfillTrinityHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    function fulfillModestoHeight(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
     {
-        trinityLakeHeight = _height;
+        modestoLakeHeight = _height;
     }
 
-    function fulfillOrovilleHistoricalAvgHt(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    function fulfillDonPedroHistoricalAvgHt(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
     {
-        orovilleHistoricalAvgHeight = _height;
+        donPedroHistoricalAvgHeight = _height;
     }
 
-    function fulfillTrinityHistoricalAvgHt(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
+    function fulfillModestoHistoricalAvgHt(bytes32 _requestId, uint256 _height) public recordChainlinkFulfillment(_requestId)
     {
-        trinityHistoricalAvgHeight = _height;
+        modestoHistoricalAvgHeight = _height;
     }
 }
+

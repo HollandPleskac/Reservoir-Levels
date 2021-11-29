@@ -27,7 +27,7 @@ const Logo = () => {
     <Link passHref href="/" >
       <a className='w-1/4 pl-10 flex items-center cursor-pointer' >
         <FontAwesomeIcon icon={faAdjust} className="text-3xl mr-4" />
-        <h1 className='text-lg' >Alameda Water District</h1>
+        <h1 className='text-lg' >Modesto Water District</h1>
       </a>
     </Link>
   )

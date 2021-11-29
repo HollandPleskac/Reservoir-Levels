@@ -4,8 +4,8 @@ import ContractContext from '../context/contractContext'
 const SideBar = () => {
   const contractCtx = useContext(ContractContext)
 
-  const isInitialized = contractCtx.orovilleHeight !== null && contractCtx.trinityHeight !== null
-  const isAboveHistoricalAvg = contractCtx.orovilleHeight > contractCtx.orovilleHistAvg && contractCtx.trinityHeight > contractCtx.trinityHistAvg
+  const isInitialized = contractCtx.donPedroHeight !== null && contractCtx.modestoHeight !== null
+  const isAboveHistoricalAvg = contractCtx.donPedroHeight > contractCtx.donPedroHistAvg && contractCtx.modestoHeight > contractCtx.modestoHistAvg
   const color = !isInitialized ? 'white' : isAboveHistoricalAvg ? 'reservoirGreen' : 'reservoirRed'
 
   return (
@@ -27,9 +27,9 @@ const StatusInfo = ({ color }) => {
   let text
 
   if (color === 'reservoirGreen')
-    text = 'The water levels in the Lake Oroville and Trinity Lake reservoirs are above historical averages.  Well done.  As a community we’ve worked hard to conserve water.'
+    text = 'The water levels in the Don Pedro and Modesto reservoirs are above historical averages.  Well done.  As a community we’ve worked hard to conserve water.'
   else
-    text = 'There water levels in the Lake Oroville and Trinity Lake reservoirs are below historical averages.  We need to work together in order to conserve water!'
+    text = 'There water levels in the Don Pedro and Modesto reservoirs are below historical averages.  We need to work together in order to conserve water!'
 
   return (
     <>
@@ -59,9 +59,9 @@ const AdditionalResourcesInfo = () => {
       <h2 className='text-lg mb-2 mt-6' >Additional Resources</h2>
       <p className='pr-10' >To learn more about water conservation visit these websites.</p>
       <ul className='mt-2' >
-        <li>1. alemendawaterdistrict.com</li>
-        <li>2. orovillelake.com</li>
-        <li>3. trinitylake.com</li>
+        <li>1. modestowaterdistrict.com</li>
+        <li>2. donpedroreservoir.com</li>
+        <li>3. modestoreservoir.com</li>
       </ul>
     </>
   )

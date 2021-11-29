@@ -7,7 +7,7 @@ const fs = require("fs");
 async function main() {
   const kovanLinkTokenAddress = "0xa36085F69e2889c224210F603D836748e7dC0088"
   const ReservoirLevels = await hre.ethers.getContractFactory("ReservoirLevels");
-  const reservoirLevels = await ReservoirLevels.deploy();
+  const reservoirLevels = await ReservoirLevels.deploy(25);
 
   await reservoirLevels.deployed();
 
